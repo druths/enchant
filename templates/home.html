@@ -1,0 +1,13 @@
+<html>
+
+<body>
+
+<h2>{{ username }}'s notebooks</h2>
+<ul>
+	{% for notebook in notebooks %}
+	<li><a href="/{{ username }}/notebook/{{ notebook }}">{{ notebook }}</li>
+	{% endfor %}
+</ul>
+</body>
+
+</html>
