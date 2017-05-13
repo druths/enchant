@@ -7,6 +7,8 @@ web-based interface.
 ## Setup a user
 In the enchant directory, create the folder `notebooks/<username>` for the user you want. (You can have multiple users).
 
+In this directory, create the file `.passwd` containing the password for this user.
+
 ## Launch a user
 To launch the server, from within the `enchant` directory, use the command:
 
@@ -16,9 +18,11 @@ by default it will listen on port 13105. Use command line arguments to configure
 
 ## Access the server in a web browser
 Open a web-browser to the IP address+port combination on which the server is
-running. The crucial 
+running.
 
-  * `http://<hostname>:<port>/<username>` - the home page for the specified user. From here the user can manage their notebooks.
+Navigate to `http://<hostname>:<port>/login`. You'll be prompted for a username
+and	password. Enter the credentials for a user you've created (as described
+above).
 
 # Relevant directories
 
