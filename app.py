@@ -320,23 +320,30 @@ def user_home(username):
     notebook_names = get_notebook_names(username)
     return render_template('home.html',username=username,notebooks=notebook_names)
 
-@app.route('/<username>/create_notebook')
+@app.route('/<username>/create_notebook',methods=['GET','POST'])
 @login_required
 def create_notebook_handler(username):
-    notebook_name = request.args.get('notebook_name')
+    if request.method == 'POST':
+        notebook_name = request.form['notebook_name']
+
+        if notebook_name == '':
+            return json_failed_response('notebook_name not specified')
     
-    # if the argument wasn't supplied
-    if notebook_name is None:
-        return json_failed_response('notebook_name not specified')
+        # check if the notebook already exists
+        if notebook_exists(username,notebook_name):
+            return json_failed_response('notebook already exists')
     
-    # check if the notebook already exists
-    if notebook_exists(username,notebook_name):
-        return json_failed_response('notebook already exists')
-    
-    # create the notebook
-    create_notebook(username,notebook_name)
-    
-    return JSON_OK_RESPONSE
+        # create the notebook
+        create_notebook(username,notebook_name)
+        
+        return redirect('/%s' % username)
+    else:
+        return Response('''
+        <form action="" method="post">
+            <p>Notebook name: <input type=text name=notebook_name></p>
+            <p><input type=submit value="Create"></p>
+        </form>
+        ''')
 
 @app.route('/<username>/notebook/<notebook>')
 @login_required

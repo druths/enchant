@@ -3,6 +3,14 @@
 <body>
 
 <h2>{{ username }}'s notebooks</h2>
+
+<ul>
+	<li><a href="/{{ username }}/create_notebook">Create a notebook</a></li>
+	<li><a href="/logout">Logout</a></li>
+</ul>
+
+<h3>Existing notebooks</h3>
+
 <ul>
 	{% for notebook in notebooks %}
 	<li><a href="/{{ username }}/notebook/{{ notebook }}">{{ notebook }}</li>
