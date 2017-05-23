@@ -9,7 +9,7 @@ from flask import Flask, render_template, request, send_from_directory, Response
 from flask.ext.socketio import SocketIO, emit, join_room, leave_room
 from werkzeug.routing import BaseConverter
 from werkzeug.utils import secure_filename
-from flask.ext.login import LoginManager, UserMixin, login_required, login_user, logout_user
+from flask.ext.login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
 
 import user as enchant_user
 
@@ -350,7 +350,10 @@ def load_notebook(username,notebook):
 
 @socketio.on('connect') #, namespace='/test')
 def test_connect():
-    emit('my response', {'data': 'Connected'})
+    if current_user.is_authenticated:
+        emit('my response', {'data': 'Connected'})
+    else:
+        return False
 
 @socketio.on('disconnect') #, namespace='/test')
 def test_disconnect():
