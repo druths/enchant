@@ -1,7 +1,10 @@
 <html>
 
 <head>
-<link href="/static/jquery-ui.css" type="text/css" rel="stylesheet">
+	<title>{{ notebook }}</title>
+	<link href="/static/styles.css" type="text/css" rel="stylesheet">
+	<link href="/static/jquery-ui.css" type="text/css" rel="stylesheet">
+	<link rel="shortcut icon" href="/static/round-shield-with-star-832031.ico" type="image/x-icon">
 <style>
 
 body {
@@ -69,7 +72,7 @@ console.log('notebook: ' + nb_name);
 
 $(document).ready(function(){
 	// set the title of the notebook
-	$('#nb_title').text('Notes from ' + nb_name);
+	// $('#nb_title').text('Notes from ' + nb_name);
 
 	// connect to server
     var socket = io.connect('http://' + document.domain + ':' + location.port);
@@ -134,10 +137,30 @@ $(document).ready(function(){
 </script>
 
 <body>
-	<h1 id="nb_title">Notebook</h1>
+	<div class="container">
+		<!--		<div class="header">
+			<h1 class="header-heading">Notebook: {{ notebook }}</h1>
 	<p id="cxn_status" style="text-align: right">Connection status: <img id="cxn_led" src="/static/red-dot-md.png" height=10 width=10/></p>
+		</div>
+		-->
+		<div class="nav-bar">
+			<img src="/static/main-logo-white.png" style="float: left; margin-left: -35px; margin-top: -5px; margin-right: 10px" height="30px"/></li>
+
+			<ul class="nav">
+				<li><font style="color: white">Notebook: {{ notebook }} </font><img id="cxn_led" src="/static/red-dot-md.png" height=10 width=10/></li>
+				<li><a href="/{{ username }}">Home</a></li>
+				<li><a href="/logout">Logout</a></li>
+			</ul>
+		</div>
+
+	<div class="content">
+		<div class="main">
+			<div id="block_head"/>
+
 	<!--	<input type="button" value="Create Plot" onclick="insertChart();"/> -->
 
+		</div>
+	</div>
 </body>
 
 <script>
@@ -170,7 +193,7 @@ function createBlockContainer(title,timestamp,inner_component) {
 	div.appendChild(inner_component);
 
 	//document.body.appendChild(outer_div)
-	$(outer_div).insertAfter('#cxn_status');
+	$(outer_div).insertAfter('#block_head');
 	//$('#cxn_status').insertAfter(outer_div);
 	$('#'+div.id).resizable();
 
@@ -181,7 +204,7 @@ function insertImage(image_data) {
 
 	var title = image_data["title"];
 	var timestamp = image_data["timestamp"];
-	var url = '/static/images/' + image_data["filename"];
+	var url = '/upload/images/' + image_data["filename"];
 
 	var img_ref = document.createElement("img");
 	img_ref.className = 'resizableImage';

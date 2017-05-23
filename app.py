@@ -15,7 +15,7 @@ import user as enchant_user
 
 logger = logging.getLogger(os.path.basename(__file__))
 
-app = Flask(__name__)
+app = Flask(__name__,static_url_path='')
 app.config['SECRET_KEY'] = 'secret!'
 
 login_manager = LoginManager()
@@ -154,7 +154,12 @@ def get_nb_room(username,notebook):
 #####
 # serve necessary static content
 #####
-@app.route('/static/images/<filename>')
+@app.route('/static/<path:path>')
+def static_resource(path):
+    print 'fetching a static resource: %s' % path
+    return send_from_directory('static',path)
+
+@app.route('/upload/images/<filename>')
 @login_required
 def serve_image_data(filename):
     return send_from_directory(IMAGE_UPLOAD_FOLDER,filename)    
@@ -298,17 +303,6 @@ def submit_text(username,notebook):
 #####
 # all websocket related notebook stuff
 #####
-"""
-@app.route('/static/<path:path>')
-def static_resource(path):
-    print 'fetching a static resource: %s' % path
-    return app.send_static_file(path)
-"""
-
-@app.route('/favicon.ico')
-def favicon():
-    return ''
-
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -352,7 +346,7 @@ def load_notebook(username,notebook):
     if not notebook_exists(username,notebook):
         return render_template('404_notebook.html')
 
-    return render_template('notebook.html')
+    return render_template('notebook.html',notebook=notebook,username=username)
 
 @socketio.on('connect') #, namespace='/test')
 def test_connect():

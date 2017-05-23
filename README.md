@@ -40,7 +40,8 @@ the following command to add a text block to notebook `test`.
 
 	enchant -H <hostname> -P <port> txt -u <username> -p <password> test "My First Block" "Hello world!"
 
-You should see a new text block show up in your web browser.
+You should see a new text block show up in your web browser. For more
+information, check out the client.
 
 # Relevant directories
 
@@ -51,3 +52,11 @@ The following directories within the install directory are used:
 	`<username>/<notebook_name>/<blocks>`.
   * `upload/images` - this is the directory in which all notebook images are stored.
 
+# Acknowledgements
+
+Special thanks to the following for web design assets:
+
+  * For the current logo: [iconninja](http://www.iconninja.com/round-shield-with-star-icon-832031)
+  * For the webpage template: [One-column fixed-width responsive layout](https://github.com/russmaxdesign/example-layout-one-fixed)
+
+I'm design-impaired, so these resources were hugely useful.

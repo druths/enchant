@@ -1,21 +1,52 @@
 <html>
 
+<head>
+	<title>{{ username }}</title>
+	<link href="/static/styles.css" type="text/css" rel="stylesheet">
+	<link href="/static/jquery-ui.css" type="text/css" rel="stylesheet">
+	<link rel="shortcut icon" href="/static/round-shield-with-star-832031.ico" type="image/x-icon">
+</head>
+
 <body>
 
-<h2>{{ username }}'s notebooks</h2>
+	<div class="container">
+		<!--
+		<div class="header">
+			<h1 class="header-heading">Welcome {{ username }}</h1>
+		</div>
+		-->
+		<div class="nav-bar">
+			<!-- <img src="/static/main-logo.png" /> -->
+			<img src="/static/main-logo-white.png" style="float: left; margin-left: -35px; margin-top: -5px; margin-right: 10px" height="30px"/></li>
 
-<ul>
-	<li><a href="/{{ username }}/create_notebook">Create a notebook</a></li>
-	<li><a href="/logout">Logout</a></li>
-</ul>
+			<ul class="nav">
+				<li><font style="color:white">{{ username }}</font></li>
+				<li><a href="/{{ username }}/create_notebook">Create Notebook</a></li>
+				<li><a href="/logout">Logout</a></li>
+			</ul>
+		</div>
 
-<h3>Existing notebooks</h3>
+	<div class="content">
+		<div class="main">
 
-<ul>
-	{% for notebook in notebooks %}
-	<li><a href="/{{ username }}/notebook/{{ notebook }}">{{ notebook }}</li>
-	{% endfor %}
-</ul>
+		<h3>Existing notebooks</h3>
+		
+		<table>
+		{% for notebook in notebooks %}
+		<tr><td>{{ notebook }}</td><td><a target="_blank" href="/{{ username }}/notebook/{{ notebook }}">Open</td><td>Delete</td></tr>
+		{% endfor %}
+		</table>
+		<!--
+		<ul>
+			{% for notebook in notebooks %}
+			<li><a href="/{{ username }}/notebook/{{ notebook }}">{{ notebook }}</li>
+			{% endfor %}
+		</ul>
+		-->
+
+		</div>
+	</div>
+
 </body>
 
 </html>
