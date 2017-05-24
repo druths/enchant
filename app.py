@@ -9,6 +9,7 @@ from flask import Flask, render_template, request, send_from_directory, Response
 from flask.ext.socketio import SocketIO, emit, join_room, leave_room
 from werkzeug.routing import BaseConverter
 from werkzeug.utils import secure_filename
+from werkzeug.contrib.fixers import ProxyFix
 from flask.ext.login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
 
 import user as enchant_user
@@ -16,6 +17,8 @@ import user as enchant_user
 logger = logging.getLogger(os.path.basename(__file__))
 
 app = Flask(__name__,static_url_path='')
+app.wsgi_app = ProxyFix(app.wsgi_app)
+
 app.config['SECRET_KEY'] = 'secret!'
 
 login_manager = LoginManager()
@@ -190,6 +193,9 @@ def login():
         else:
             return Response('<p>Login failed</p>')
     else:
+        print request.headers.to_list()
+        print request.get_data()
+
         return Response('''
         <form action="" method="post">
             <p><input type=text name=username></p>
