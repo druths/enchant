@@ -1,7 +1,7 @@
 <html>
 
 <head>
-	<title>{{ notebook }}</title>
+	<title>{{ username }}/{{ notebook }}</title>
 	<link href="/static/styles.css" type="text/css" rel="stylesheet">
 	<link href="/static/jquery-ui.css" type="text/css" rel="stylesheet">
 	<link rel="shortcut icon" href="/static/round-shield-with-star-832031.ico" type="image/x-icon">
@@ -75,7 +75,7 @@ $(document).ready(function(){
 	// $('#nb_title').text('Notes from ' + nb_name);
 
 	// connect to server
-    var socket = io.connect('http://' + document.domain + ':' + location.port);
+    var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
 	socket.on('connect', function() {
 		console.log('connected');
@@ -147,7 +147,8 @@ $(document).ready(function(){
 			<img src="/static/main-logo-white.png" style="float: left; margin-left: -35px; margin-top: -5px; margin-right: 10px" height="30px"/></li>
 
 			<ul class="nav">
-				<li><font style="color: white">Notebook: {{ notebook }} </font><img id="cxn_led" src="/static/red-dot-md.png" height=10 width=10/></li>
+				<li><font style="color: white">{{ username }}/{{ notebook }} </font><img id="cxn_led" src="/static/red-dot-md.png" height=10 width=10/></li>
+				<li><font style="color: white">|</font></li>
 				<li><a href="/{{ username }}">Home</a></li>
 				<li><a href="/logout">Logout</a></li>
 			</ul>
