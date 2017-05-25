@@ -191,18 +191,10 @@ def login():
             login_user(user)
             return redirect('/%s' % username)
         else:
-            return Response('<p>Login failed</p>')
+            error = 'Invalid credentials'
+            return render_template('login.html',error=error)
     else:
-        print request.headers.to_list()
-        print request.get_data()
-
-        return Response('''
-        <form action="" method="post">
-            <p><input type=text name=username></p>
-            <p><input type=password name=password></p>
-            <p><input type=submit value=Login></p>
-        </form>
-        ''')
+        return render_template('login.html')
 
 """
 @app.route('/settings')
@@ -227,11 +219,28 @@ def allowed_file(filename):
 @app.route('/submit/image/<username>/<notebook>',methods=['POST'])
 def submit_image(username,notebook):
 
+    header = dict(request.form.items())
+
+    # check user permissions
+    if 'username' not in header:
+        return '{"result":"failed","message":"no username provided"}'
+
+    if 'password' not in header:
+        return '{"result":"failed","message":"no password provided"}'
+
+    if username != header['username']:
+        return '{"result":"failed","message":"auth user (%s) is not notebook owner (%s)"}' % (header['username'],username)
+
+    if not enchant_user.check_user_password(NOTEBOOKS_FOLDER,header['username'],header['password']):
+        return '{"result":"failed","message":"authentication failed"}'
+
+    del header['username']
+    del header['password']
+
     # store the image to a file
     if 'file' not in request.files:
         return '{"result":"failed","message":"no file specified"}'      
 
-    header = request.form
     title = None
     if 'title' in header:
         title = header['title']
@@ -269,7 +278,8 @@ def submit_image(username,notebook):
 
 @app.route('/submit/table/<username>/<notebook>',methods=['POST'])
 def submit_table(username,notebook):
-    
+   
+    raise Exception
     table_data = json.loads(request.data)
 
     if len(table_data) == 0:
@@ -288,6 +298,30 @@ def submit_html(username,notebook):
     if len(html_data) == 0:
         return '{"result":"failed","message":"no content delivered"}'
 
+    header_line,html_data = html_data.split('\n',1)
+    try:
+        header = json.loads(header_line)
+    except:
+        return '{"result":"failed","message":"malformed header line"}'
+
+    # check user permissions
+    if 'username' not in header:
+        return '{"result":"failed","message":"no username provided"}'
+
+    if 'password' not in header:
+        return '{"result":"failed","message":"no password provided"}'
+
+    if username != header['username']:
+        return '{"result":"failed","message":"auth user is not notebook owner"}'
+
+    if not enchant_user.check_user_password(NOTEBOOKS_FOLDER,header['username'],header['password']):
+        return '{"result":"failed","message":"authentication failed"}'
+    
+    del header['username']
+    del header['password']
+
+    html_data = '%s\n%s' % (json.dumps(header),html_data)
+
     save_to_notebook(username,notebook,html_data,HTML_TYPE)
     emit(NEW_HTML_MSG, html_data, room=get_nb_room(username,notebook), namespace=DEFAULT_NAMESPACE, broadcast=True)
 
@@ -301,7 +335,31 @@ def submit_text(username,notebook):
     if len(text_content) == 0:
         return '{"result":"failed","message":"no content delivered"}'
 
-    save_to_notebook(username,notebook,text_content,TEXT_TYPE)
+    header_line,text_data = text_content.split('\n',1)
+    try:
+        header = json.loads(header_line)
+    except:
+        return '{"result":"failed","message":"malformed header line"}'
+
+    # check user permissions
+    if 'username' not in header:
+        return '{"result":"failed","message":"no username provided"}'
+
+    if 'password' not in header:
+        return '{"result":"failed","message":"no password provided"}'
+
+    if username != header['username']:
+        return '{"result":"failed","message":"auth user is not notebook owner"}'
+
+    if not enchant_user.check_user_password(NOTEBOOKS_FOLDER,header['username'],header['password']):
+        return '{"result":"failed","message":"authentication failed"}'
+    
+    del header['username']
+    del header['password']
+
+    text_data = '%s\n%s' % (json.dumps(header),text_data)
+
+    save_to_notebook(username,notebook,text_data,TEXT_TYPE)
     emit(NEW_TEXT_MSG, text_content, room=get_nb_room(username,notebook), namespace=DEFAULT_NAMESPACE, broadcast=True)
 
     return JSON_OK_RESPONSE
@@ -311,7 +369,8 @@ def submit_text(username,notebook):
 #####
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return send_from_directory('templates','index.html')
+    #return render_template('index.html')
 
 @app.route('/<username>')
 @login_required
@@ -396,10 +455,6 @@ def main():
 
     # setup the debugger
     logging.basicConfig(level=logging.DEBUG)
-
-    # TODO: setup the login manager
-    # login_manager = LoginManager()
-    # login_manager.init_app(app)
 
     # start the server
     socketio.run(app,host=args.host,port=args.port)

@@ -1,0 +1,112 @@
+<html>
+
+<head>
+	<title>enchant</title>
+	<link href="/static/styles.css" type="text/css" rel="stylesheet">
+	<link href="/static/jquery-ui.css" type="text/css" rel="stylesheet">
+	<link rel="shortcut icon" href="/static/round-shield-with-star-832031.ico" type="image/x-icon">
+</head>
+
+<body>
+
+	<div class="container">
+		<!--
+		<div class="header">
+			<h1 class="header-heading">Welcome {{ username }}</h1>
+		</div>
+		-->
+		<div class="nav-bar">
+			<!-- <img src="/static/main-logo.png" /> -->
+			<img src="/static/main-logo-white.png" style="float: left; margin-left: -35px; margin-top: -5px; margin-right: 10px" height="30px"/></li>
+
+			<ul class="nav">
+				<li><a href="/">enchant</a></li>
+				<li><font style="color:white">|</font></li>
+				<li><a href="/login">login</a></li>
+			</ul>
+		</div>
+
+	<div class="content">
+		<div class="main">
+
+			<h2>Remote visualization made simple</h2>
+
+			<p>A lot of data science happens on remote servers.  This makes
+			visualization a pain. How can we easily capture the plots,
+			diagrams, and output of processes - regardless of where they are
+			run?</p>
+			
+			<p>enchant provides a simple, lightweight solution. Imagine a
+			virtual space where you could easily push any and all output -
+			whether it's images, plots, text, or arbitrary HTML. That's
+			enchant.</p>
+
+			<hr/>
+
+			<table style="border: 0px;">
+				<tr>
+					<td>
+			<h2>How it works</h2>
+
+			<p><b>The workspace.</b> Your enchant workspace consists of
+			notebooks.  You have only one workspace, but you can have as many
+			notebooks as you want.</p>
+		
+			<p><b>The notebook.</b> A notebook is a log of results.  Each
+			result is called a <i>block</i>. Every block has a title and a
+			timestamp. Put whatever you want into your notebook - text, images,
+			HTML. Once it's in, it stays there.  So you can always go back
+			through your log and find results that you generated five minutes
+			ago, yesterday, or last January.</p>
+
+			<p><b>Posting results.</b> You post new blocks to a notebook using
+			either UNIX simple command line programs or programmatic functions:
+			
+			<blockquote>
+				<h4>Command line</h4>
+			<pre>$ enchant img ineq_nb \
+  "Inequality by decade" \
+  ineq_dec.png</pre>
+
+				<h4>Python</h4>
+			<pre>send_text('inequality_nb',
+          'Basic stats',
+          '\n'.join(stats))</pre>
+			</blockquote>
+			
+			Current support for UNIX and
+			python are found in the <a
+			href="https://github.com/druths/enchant-client">enchant-client</a>
+			project.</p>
+
+					</td> <td> <h2>How it compares</h2>
+			
+			<p><b>enchant vs. files.</b> If you wanted, you could scp images
+			and plots from your compute server whenever you generate a new
+			result.  But that's a pain - it's slow ... and it doesn't play well
+			with long-running jobs. With enchant, you can check up on your
+			results from anywhere right on your smartphone!</p>
+
+			<p><b>enchant vs. jupyter.</b> Jupyter and Zepplin are awesome
+			interactive notebook. But they have a weird state problem: it's
+			hard to know what version of the code in the notebook generated the
+			plot you're looking at.  Admittedly, enchant doesn't specifically
+			bind results to code.  But by decoupling the result log from the
+			code, it becomes less confusing.</p>
+
+			<p><b>enchant vs. a laptop.</b> Sure... you can run all your tasks
+			on your laptop.  But many projects will outgrow a desktop - and
+			when they do, research results get fragmented.</p>
+
+
+
+					</td>
+				</tr>
+			</table>
+		
+		</div> </div>
+	
+
+</body>
+
+</html>

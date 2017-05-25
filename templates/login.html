@@ -1,7 +1,7 @@
 <html>
 
 <head>
-	<title>{{ username }}</title>
+	<title>login</title>
 	<link href="/static/styles.css" type="text/css" rel="stylesheet">
 	<link href="/static/jquery-ui.css" type="text/css" rel="stylesheet">
 	<link rel="shortcut icon" href="/static/round-shield-with-star-832031.ico" type="image/x-icon">
@@ -20,30 +20,26 @@
 			<img src="/static/main-logo-white.png" style="float: left; margin-left: -35px; margin-top: -5px; margin-right: 10px" height="30px"/></li>
 
 			<ul class="nav">
-				<li><font style="color:white">{{ username }}</font></li>
+				<li><a href="/">enchant</a></li>
 				<li><font style="color:white">|</font></li>
-				<li><a href="/{{ username }}/create_notebook">create_notebook</a></li>
-				<li><a href="/logout">logout</a></li>
+				<li><font style="color:white">user login</font></li>
 			</ul>
 		</div>
 
 	<div class="content">
 		<div class="main">
 
-		<h3>Existing notebooks</h3>
-		
-		<table>
-		{% for notebook in notebooks %}
-		<tr><td>{{ notebook }}</td><td><a target="_blank" href="/{{ username }}/notebook/{{ notebook }}">open</td><td>delete</td></tr>
-		{% endfor %}
+		{% if error %}
+		<p style="color: red; margin: 3px;"><strong>{{ error }}</strong></p>
+		{% endif %}
+
+		<form action="" method="post">
+		<table style="border: 0px;">
+			<tr><td>Username</td><td><input type=text name=username></td></tr>
+			<tr><td>Password</td><td><input type=password name=password></td></tr>
+			<tr><td colspan="2"><input type=submit value=Login></td></tr>
 		</table>
-		<!--
-		<ul>
-			{% for notebook in notebooks %}
-			<li><a href="/{{ username }}/notebook/{{ notebook }}">{{ notebook }}</li>
-			{% endfor %}
-		</ul>
-		-->
+		</form>
 
 		</div>
 	</div>

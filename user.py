@@ -2,6 +2,9 @@ import os,os.path
 
 def check_user_password(notebooks_folder,username,password):
 
+    if len(username) == 0:
+        return False
+
     # does the user exist?
     user_dir = os.path.join(notebooks_folder,username)
 
