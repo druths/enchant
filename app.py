@@ -13,7 +13,7 @@ from werkzeug.contrib.fixers import ProxyFix
 from flask.ext.login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
 
 from config import *
-from user import User 
+from user import User, create_user, get_all_users, user_exists
 
 logger = logging.getLogger(os.path.basename(__file__))
 
@@ -365,13 +365,50 @@ def index():
     return send_from_directory('templates','index.html')
     #return render_template('index.html')
 
+@app.route('/admin')
+@login_required
+def admin():
+    if not current_user.is_admin():
+        return '<html><h2>You are not an admin</h2></html>'
+
+    username_list = get_all_users()
+
+    return render_template('admin.html',username=current_user.id,username_list=username_list)
+
+@app.route('/admin/create_user',methods=['GET','POST'])
+@login_required
+def create_user_handler():
+   
+    if not current_user.is_admin():
+        return '<html><h2>You are not an admin</h2></html>'
+
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+
+        if username == '':
+            return json_failed_response('username not specified')
+    
+        # check if the notebook already exists
+        if user_exists(username):
+            return json_failed_response('user named %s already exists' % username)
+    
+        # create the notebook
+        create_user(username,password)
+        
+        return redirect('/admin')
+    else:
+        return render_template('create_user.html',username=current_user.id)
+
 @app.route('/<username>')
 @login_required
 def user_home(username):
     # List out the notebooks available
+    user = User(username)
     notebook_names = get_notebook_names(username)
-    return render_template('home.html',username=username,notebooks=notebook_names)
-
+    return render_template( 'home.html',username=username,
+                            is_admin=user.is_admin(),notebooks=notebook_names)
+   
 @app.route('/<username>/create_notebook',methods=['GET','POST'])
 @login_required
 def create_notebook_handler(username):

@@ -75,3 +75,15 @@ def create_user(username,password):
         json.dump(profile,open(os.path.join(user_dir,USER_PROFILE_FNAME),'w'))
 
         return User(username)
+
+def is_user_dir(upath):
+    return os.path.exists(os.path.join(upath,USER_PROFILE_FNAME))
+    
+def user_exists(username):
+    return os.path.exists(os.path.join(NOTEBOOKS_FOLDER,username,USER_PROFILE_FNAME))
+
+def get_all_users():
+    user_dirs = os.listdir(os.path.join(NOTEBOOKS_FOLDER))
+
+    return filter(lambda x: is_user_dir(os.path.join(NOTEBOOKS_FOLDER,x)),user_dirs)
+
