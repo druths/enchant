@@ -390,12 +390,7 @@ def create_notebook_handler(username):
         
         return redirect('/%s' % username)
     else:
-        return Response('''
-        <form action="" method="post">
-            <p>Notebook name: <input type=text name=notebook_name></p>
-            <p><input type=submit value="Create"></p>
-        </form>
-        ''')
+        return render_template('create_notebook.html',username=username)
 
 @app.route('/<username>/notebook/<notebook>')
 @login_required

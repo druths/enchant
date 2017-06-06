@@ -1,0 +1,47 @@
+<html>
+
+<head>
+	<title>login</title>
+	<link href="/static/styles.css" type="text/css" rel="stylesheet">
+	<link href="/static/jquery-ui.css" type="text/css" rel="stylesheet">
+	<link rel="shortcut icon" href="/static/round-shield-with-star-832031.ico" type="image/x-icon">
+</head>
+
+<body>
+
+	<div class="container">
+		<!--
+		<div class="header">
+			<h1 class="header-heading">Welcome {{ username }}</h1>
+		</div>
+		-->
+		<div class="nav-bar">
+			<!-- <img src="/static/main-logo.png" /> -->
+			<img src="/static/main-logo-white.png" style="float: left; margin-left: -35px; margin-top: -5px; margin-right: 10px" height="30px"/></li>
+
+			<ul class="nav">
+				<li><font style="color:white">{{ username }}/create_notebook</font></li>
+				<li><font style="color:white">|</font></li>
+			</ul>
+		</div>
+
+	<div class="content">
+		<div class="main">
+
+		{% if error %}
+		<p style="color: red; margin: 3px;"><strong>{{ error }}</strong></p>
+		{% endif %}
+
+        <form action="" method="post">
+		<table style="border: 0px;">
+			<tr><td>Notebook name</td><td><input type=text name=notebook_name></td></tr>
+			<tr><td colspan="2"><input type=submit value="Create"></td></tr>
+		</table>
+        </form>
+
+		</div>
+	</div>
+
+</body>
+
+</html>
