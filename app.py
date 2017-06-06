@@ -12,7 +12,8 @@ from werkzeug.utils import secure_filename
 from werkzeug.contrib.fixers import ProxyFix
 from flask.ext.login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
 
-import user as enchant_user
+from config import *
+from user import User 
 
 logger = logging.getLogger(os.path.basename(__file__))
 
@@ -28,10 +29,6 @@ login_manager.login_view = 'login'
 # for image upload
 #app.config['UPLOAD_FOLDER'] = ??
 #app.config['MAX_CONTENT_PATH'] = ??
-IMAGE_UPLOAD_FOLDER = os.path.join(os.path.dirname(__file__),'upload','images')
-ALLOWED_IMAGE_EXTENSIONS = set(['png','jpg','jpeg','gif'])
-
-NOTEBOOKS_FOLDER = os.path.join(os.path.dirname(__file__),'notebooks')
 
 socketio = SocketIO(app)
 
@@ -171,11 +168,6 @@ def serve_image_data(filename):
 # methods for user management
 #####
 
-class User(UserMixin):
-
-    def __init__(self,username):
-        self.id = username
-
 @login_manager.user_loader
 def load_user(username):
     return User(username)
@@ -185,9 +177,8 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-
-        if enchant_user.check_user_password(NOTEBOOKS_FOLDER,username,password):
-            user = User(username)
+        user = User(username)
+        if user.check_password(password):
             login_user(user)
             return redirect('/%s' % username)
         else:
@@ -230,8 +221,8 @@ def submit_image(username,notebook):
 
     if username != header['username']:
         return '{"result":"failed","message":"auth user (%s) is not notebook owner (%s)"}' % (header['username'],username)
-
-    if not enchant_user.check_user_password(NOTEBOOKS_FOLDER,header['username'],header['password']):
+    user = User(header['username'])
+    if not user.check_password(header['password']):
         return '{"result":"failed","message":"authentication failed"}'
 
     del header['username']
@@ -314,7 +305,8 @@ def submit_html(username,notebook):
     if username != header['username']:
         return '{"result":"failed","message":"auth user is not notebook owner"}'
 
-    if not enchant_user.check_user_password(NOTEBOOKS_FOLDER,header['username'],header['password']):
+    user = User(username)
+    if not user.check_password(header['password']):
         return '{"result":"failed","message":"authentication failed"}'
     
     del header['username']
@@ -351,7 +343,8 @@ def submit_text(username,notebook):
     if username != header['username']:
         return '{"result":"failed","message":"auth user is not notebook owner"}'
 
-    if not enchant_user.check_user_password(NOTEBOOKS_FOLDER,header['username'],header['password']):
+    user = User(username)
+    if not user.check_password(header['password']):
         return '{"result":"failed","message":"authentication failed"}'
     
     del header['username']
