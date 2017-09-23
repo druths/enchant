@@ -228,7 +228,7 @@ def submit_image(username,notebook):
     del header['username']
     del header['password']
 
-    # store the image to a file
+    # check for the image file
     if 'file' not in request.files:
         return '{"result":"failed","message":"no file specified"}'      
 
@@ -284,16 +284,12 @@ def submit_table(username,notebook):
 @app.route('/submit/html/<username>/<notebook>',methods=['POST'])
 def submit_html(username,notebook):
     
-    html_data = request.data
-    
-    if len(html_data) == 0:
-        return '{"result":"failed","message":"no content delivered"}'
+    # load the header
+    header = dict(request.form.items())
 
-    header_line,html_data = html_data.split('\n',1)
-    try:
-        header = json.loads(header_line)
-    except:
-        return '{"result":"failed","message":"malformed header line"}'
+    # check if the html file is provided
+    if 'file' not in request.files:
+        return '{"result":"failed","message":"no file specified"}'      
 
     # check user permissions
     if 'username' not in header:
@@ -312,6 +308,14 @@ def submit_html(username,notebook):
     del header['username']
     del header['password']
 
+    # get the file
+    f = request.files['file']
+
+    # extract the data
+    data = f.read()
+    html_data = data
+
+    # add a trimmed version of the header to the html data
     html_data = '%s\n%s' % (json.dumps(header),html_data)
 
     save_to_notebook(username,notebook,html_data,HTML_TYPE)
