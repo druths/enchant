@@ -2,7 +2,7 @@ import os,os.path
 import json
 import crypt
 
-from flask.ext.login import UserMixin
+from flask_login import UserMixin
 
 from config import *
 
@@ -15,7 +15,7 @@ class User(UserMixin):
 
         # check if the user exists
         if not os.path.exists(os.path.join(NOTEBOOKS_FOLDER,username,USER_PROFILE_FNAME)):
-            raise Exception, 'User %s does not exist' % username
+            raise Exception('User %s does not exist' % username)
 
     def get_user_dir(self):
         return os.path.join(NOTEBOOKS_FOLDER,self.id)
@@ -59,7 +59,7 @@ class User(UserMixin):
 def hash_password(password):
     return crypt.crypt(password,password)
 
-def create_user(username,password):
+def create_user(username,password,is_admin=False):
     user_dir = os.path.join(NOTEBOOKS_FOLDER,username)
 
     if os.path.exists(user_dir):
@@ -70,7 +70,7 @@ def create_user(username,password):
         # create a basic profile file
         profile = {
                     'crypt_passwd': hash_password(password),
-                    'is_admin': False
+                    'is_admin': is_admin
                    }
         json.dump(profile,open(os.path.join(user_dir,USER_PROFILE_FNAME),'w'))
 
@@ -86,4 +86,21 @@ def get_all_users():
     user_dirs = os.listdir(os.path.join(NOTEBOOKS_FOLDER))
 
     return filter(lambda x: is_user_dir(os.path.join(NOTEBOOKS_FOLDER,x)),user_dirs)
+
+if __name__ == '__main__':
+    import arghandler
+    import getpass
+    
+    handler = arghandler.ArgumentHandler()
+    handler.add_argument('user')
+
+    args = handler.parse_args()
+
+    user = args.user
+    passwd = getpass.getpass('password: ')
+    is_admin = input('is admin (y/n)? ') == 'y'
+
+    create_user(user,passwd,is_admin)
+
+    print(f'created user {user}')
 

@@ -14,9 +14,7 @@ Install the following dependencies:
 
 ## Setup a user
 
-In the enchant directory, create the folder `notebooks/<username>` for the user you want. (You can have multiple users).
-
-In this directory, create the file `.passwd` containing the password for this user.
+Run `python user.py <username>` to create a user.  You'll be prompted for a password for the user.
 
 ## Launch a user
 

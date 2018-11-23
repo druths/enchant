@@ -6,11 +6,11 @@ import logging
 import json
 
 from flask import Flask, render_template, request, send_from_directory, Response, redirect, url_for
-from flask.ext.socketio import SocketIO, emit, join_room, leave_room
+from flask_socketio import SocketIO, emit, join_room, leave_room
 from werkzeug.routing import BaseConverter
 from werkzeug.utils import secure_filename
 from werkzeug.contrib.fixers import ProxyFix
-from flask.ext.login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
+from flask_login import LoginManager, UserMixin, login_required, login_user, logout_user, current_user
 
 from config import *
 from user import User, create_user, get_all_users, user_exists
@@ -142,7 +142,7 @@ def replay_notebook_blocks(username,notebook):
             data = open(full_fname,'r').read()
         else:
             logger.error('unknown block type encountered: %s' % block_type)
-            raise Exception, 'unknown block type encountered: %s' % block_type
+            raise Exception('unknown block type encountered: %s' % block_type)
 
         emit(msg_type,data,room=get_nb_room(username,notebook),namespace=DEFAULT_NAMESPACE)
 
@@ -156,7 +156,7 @@ def get_nb_room(username,notebook):
 #####
 @app.route('/static/<path:path>')
 def static_resource(path):
-    print 'fetching a static resource: %s' % path
+    print('fetching a static resource: %s' % path)
     return send_from_directory('static',path)
 
 @app.route('/upload/images/<filename>')
@@ -270,7 +270,7 @@ def submit_image(username,notebook):
 @app.route('/submit/table/<username>/<notebook>',methods=['POST'])
 def submit_table(username,notebook):
    
-    raise Exception
+    raise Exception()
     table_data = json.loads(request.data)
 
     if len(table_data) == 0:
@@ -457,7 +457,7 @@ def test_disconnect():
 def on_join(data):
     notebook = data['notebook']
     join_room(notebook)
-    print 'joining notebook %s' % notebook
+    print('joining notebook %s' % notebook)
 
     # replay the notebook events
     username,notebook_name = notebook.split('-')
@@ -469,7 +469,7 @@ def on_join(data):
 def on_leave(data):
     notebook = data['notebook']
     leave_room(notebook)
-    print 'leaving notebook %s' % notebook
+    print('leaving notebook %s' % notebook)
 
 #################
 def main():
