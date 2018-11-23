@@ -4,6 +4,14 @@ web-based interface.
 
 # Quick Start
 
+## Install dependencies
+Install the following dependencies:
+
+  - flask
+  - flask-login
+  - flask-socketio
+  - arghandler
+
 ## Setup a user
 
 In the enchant directory, create the folder `notebooks/<username>` for the user you want. (You can have multiple users).
