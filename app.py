@@ -111,7 +111,7 @@ def replay_notebook_blocks(username,notebook):
         # nothing to replay
         return
 
-    block_files = filter(lambda x: x.startswith('block'), os.listdir(nb_dir))
+    block_files = list(filter(lambda x: x.startswith('block'), os.listdir(nb_dir)))
     def block_index(fname):
         return int(fname.replace('block','').rsplit('.',1)[0])
     block_files.sort(key=block_index)
@@ -325,8 +325,7 @@ def submit_html(username,notebook):
 
 @app.route('/submit/text/<username>/<notebook>',methods=['POST'])
 def submit_text(username,notebook):
-    
-    text_content = request.data
+    text_content = request.get_data(as_text=True)
 
     if len(text_content) == 0:
         return '{"result":"failed","message":"no content delivered"}'
